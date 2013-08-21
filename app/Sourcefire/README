@@ -1,27 +1,25 @@
-###################################################################
-#                                                                 #
-#  Splunk for Sourcefire App (v2.0)                               #
-#                                                                 #
-#  Description:                                                   #
-#     Connect to an eStreamer server (e.g. Defense Center) and    #
-#     pull intrusion event records and packet records (pcap data) #
-#     into Splunk. A user can search through eStreamer records    #
-#     based on IP addresses, ports, event ID, and etc.            #
-#                                                                 #
-#  Splunk Version: 4.1 and Higher                                 #
-#  Supported Platform: Linux                                      #
-#  Last Modified: Mar-2012                                        #
-#                                                                 #
-#  Author: Andrew Thanalertvisuti - Splunk, Inc.                  #
-#          athana@splunk.com                                      #
-#                                                                 #
-#  For support: This is an usupported app                         #
-#  Please post to answers.splunk.com                              #
-#                                                                 #
-###################################################################
+Splunk for Sourcefire App (v2.0)                               #
+                                                                 #
+  Description:                                                   #
+     Connect to an eStreamer server (e.g. Defense Center) and    #
+     pull intrusion event records and packet records (pcap data) #
+     into Splunk. A user can search through eStreamer records    #
+     based on IP addresses, ports, event ID, and etc.            #
+                                                                 #
+  Splunk Version: 4.1 and Higher                                 #
+  Supported Platform: Linux                                      #
+  Last Modified: Mar-2012                                        #
+                                                                 #
+  Author: Andrew Thanalertvisuti - Splunk, Inc.                  #
+          athana@splunk.com                                      #
+                                                                 #
+  For support: This is an usupported app                         #
+  Please post to answers.splunk.com                              #
+                                                                 #
 
 
-*** Disclaimer ***
+
+Disclaimer
 
 You need to set up your eStreamer client before Splunk for Sourcefire App can
 function correctly.
@@ -29,7 +27,7 @@ function correctly.
 Please refer to docs/How_to_add_an_eStreamer_client.pdf for more information.
 
 
-*** Welcome to the Splunk for Sourcefire ***
+Welcome to the Splunk for Sourcefire 
 
 The Splunk for Sourcefire App includes an eStreamer client that will connect to
 your eStreamer server (e.g. Defense Center) and pull intrusion event records and
