@@ -1,0 +1,139 @@
+<view template="dashboard.html">
+    <label>All Intrusion Events</label>
+    <module name="AccountBar" layoutPanel="appHeader"/>
+    <module name="AppBar" layoutPanel="navigationHeader"/>
+    <module name="Message" layoutPanel="messaging">
+        <param name="filter">*</param>
+        <param name="clearOnJobDispatch">False</param>
+        <param name="maxSize">1</param>
+    </module>
+    <module name="TitleBar" layoutPanel="navigationHeader">
+        <param name="actionsMenuFilter">dashboard</param>
+    </module>
+    
+    <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+        <param name="text">You can adjust the time range of this report by selecting
+        your desired time using the picker below.</param>
+    </module>
+    
+    <module name="TimeRangePicker" layoutPanel="panel_row1_col1" autoRun="true" group="Intrusion Events">
+        <param name="default">Last 24 hours</param>
+        <param name="searchWhenChanged">true</param>
+        
+        <module name="HiddenSavedSearch" autoRun="true">
+            <param name="savedSearch">Event Records Datacube</param>
+            
+            <module name="ResultsHeader">
+                <param name="entityLabel">events</param>
+                <param name="entityName">events</param>
+                <module name="FlashTimeline">
+                    <param name="height">100px</param>
+                    <param name="width">100%</param>
+                    <module name="ViewRedirectorLink">
+                        <param name="viewTarget">flashtimeline</param>
+                        <param name="label">View Full Report</param>
+                        <param name="popup">True</param>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Intrusion Events by Sensor -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row2_col1" group="Events by Sensor">
+                <param name="search">join sensor_id [search `sensor_records`] | stats count by sensor_name</param>
+                <module name="JobProgressIndicator" />
+                <module name="HiddenChartFormatter">
+                    <param name="chart">pie</param>
+                    <module name="FlashChart">
+                        <module name="ConvertToDrilldownSearch">
+                            <module name="ViewRedirector">
+                                <param name="viewTarget">flashtimeline</param>
+                                <param name="popup">True</param>
+                            </module>
+                        </module>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Intrusion Events by Impact Flag -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row2_col2" group="Events by Impact Flag">
+                <param name="search">stats count by impact_flag</param>
+                <module name="JobProgressIndicator" />
+                <module name="HiddenChartFormatter">
+                    <param name="chart">pie</param>
+                    <module name="FlashChart">
+                        <module name="ConvertToDrilldownSearch">
+                            <module name="ViewRedirector">
+                                <param name="viewTarget">flashtimeline</param>
+                                <param name="popup">True</param>
+                            </module>
+                        </module>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Intrusion Events by IP Protocol -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row2_col3" group="Events by IP Protocol">
+                <param name="search">stats count by proto_name</param>
+                <module name="JobProgressIndicator" />
+                <module name="HiddenChartFormatter">
+                    <param name="chart">column</param>
+                    <param name="legend.placement">none</param>
+                    <param name="primaryAxisTitle.text"> </param>
+                    <module name="FlashChart">
+                        <module name="ConvertToDrilldownSearch">
+                            <module name="ViewRedirector">
+                                <param name="viewTarget">flashtimeline</param>
+                                <param name="popup">True</param>
+                            </module>
+                        </module>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Intrusion Events by Rule -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row3_col1" group="Events by Rule">
+                <param name="search">join sid [search `rule_records`] | stats count by rule_msg</param>
+                <module name="JobProgressIndicator" />
+                <module name="HiddenChartFormatter">
+                    <param name="chart">bar</param>
+                    <param name="legend.placement">none</param>
+                    <param name="primaryAxisTitle.text"> </param>
+                    <module name="FlashChart">
+                        <module name="ConvertToDrilldownSearch">
+                            <module name="ViewRedirector">
+                                <param name="viewTarget">flashtimeline</param>
+                                <param name="popup">True</param>
+                            </module>
+                        </module>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Intrusion Events Table -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="Intrusion Events">
+                <param name="search">join sid [search `rule_records`] | join sensor_id [search `sensor_records`]
+                | eval event_time = strftime(event_sec, "%m/%d/%Y %H:%M:%S")
+                | stats count by event_time sensor_name event_id rule_id rule_msg class_name priority impact_flag src_addr src_port dst_addr dst_port proto_name
+                | fields - count | sort - event_id
+                </param>
+                <module name="Paginator">
+                    <param name="entityName">results</param>
+                    <param name="count">20</param>
+                    <module name="SimpleResultsTable">
+                        <param name="drilldown">row</param>
+                        <module name="ConvertToDrilldownSearch">
+                            <module name="ViewRedirector">
+                                <param name="viewTarget">flashtimeline</param>
+                                <param name="popup">True</param>
+                            </module>
+                        </module>
+                    </module>
+                    <module name="Paginator">
+                        <param name="entityName">results</param>
+                    </module>
+                </module>
+            </module>
+            
+        </module> <!-- end HiddenSavedSearch -->
+    </module> <!-- end TimeRangePicker -->
+</view>

@@ -1,0 +1,48 @@
+<h2>Welcome to the Splunk for Sourcefire (v2.0)</h2>
+<h3>Description:</h3>
+    <p>Connect to an eStreamer server (e.g. Defense Center) and
+    pull intrusion event records and packet records (pcap data)
+    into Splunk. A user can search through eStreamer records
+    based on IP addresses, ports, event ID, and etc.
+    </p>
+<h3>Requirements:</h3>
+<ul>
+    <li>Splunk Version: 4.1 and Higher</li>
+    <li>Supported Platform: Linux</li>
+</ul>
+Last Modified: Mar-2012<br />
+<br />
+Author: Andrew Thanalertvisuti - Splunk, Inc.<br />
+athana@splunk.com<br />
+<br />
+For support, please contact: bd-labs@splunk.com<br />
+
+<h3>Disclaimer:</h3>
+<p>You need to set up your eStreamer client before Splunk for Sourcefire App can
+function correctly.</p>
+Please refer to docs/How_to_add_an_eStreamer_client.pdf for more information.<br />
+
+<h3>Welcome to Splunk for Sourcefire</h3>
+<p>The Splunk for Sourcefire App includes an eStreamer client that will connect to
+your eStreamer server (e.g. Defense Center) and pull intrusion event records and
+packet records (pcap data) into Splunk. Then you can search through eStreamer
+records based on source or destination IP addresses, ports, event ID, and etc.
+</p>
+<p>By default, the app will not try to pull the packet records (pcap data) from the
+eStreamer server. You can enable the pcap input by editing inputs.conf:</p>
+    <code>$ vi $SPLUNK_HOME/etc/apps/Sourcefire/default/inputs.conf</code>
+
+<p>Change the line that says "disabled = true" to "disabled = false" like the following:</p>
+    <code>
+    [script://$SPLUNK_HOME/etc/apps/Sourcefire/bin/estreamer_pcap.py]<br />
+    disabled = false<br />
+    interval = 60<br />
+    source = estreamer_pcap.py<br />
+    sourcetype = estreamer_pcap<br />
+    </code>
+<p>Then restart the Splunk server.</p>
+<br />
+<p>NOTE: It may take up to 5 minutes for new data to show up. 
+The app relies on "sourcetype = estreamer" and "sourcetype = estreamer_pcap" data, please do not change the sourcetype in inputs.conf.</p>
+<br />
+For support, please contact: bd-labs@splunk.com

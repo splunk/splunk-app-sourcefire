@@ -1,0 +1,37 @@
+The OutputPlugins directory contains perl modules that provide the output
+methods that the estreamer client uses.  If you wish to customize an output
+method or create your own, simply edit or add a file in this directory.  If
+you are creating a new plugin, please consider first copying an existing
+one to use as a template.
+
+The API for the plugins is fairly simple, consisting of only three functions.
+
+register():
+    This function is called for every plugin when the client program is
+    started.  The plugin should return a hashref with the following keys:
+        init: A reference to the plugin's initialization function
+        output: A reference to the plugin's output function
+        description: A single-line description of what the plugin does.
+            This string is used for command line usage display.
+        flags: Which data types to request from the estreamer server.
+
+init():
+    This function is called once for the output plugin that the user has
+    selected.  It is passed the command line options hash.  The most
+    important keys in this hash are:
+        filename: The output file the user has requested.  Your plugin is
+            expected to open this file and send its output to it.  Note
+            that snmp.pm uses this filename as a network address.
+        host: If this value tests true then the user has requested to
+            receive only host information for given IP addresses.  Most
+            output plugins should refuse to operate in this mode as it is
+            not meaningful when fetching events.  If you wish to support
+            host output, see the init() function in print.pm for how it
+            changes its flags if this mode is enabled.
+
+output():
+    This function is called once for each record that is received from the
+    server.  The argument passed in is a hashref contianing the record
+    structure.  If your plugin only supports certain record types then simply
+    check the relevant fields.  For an example of fully decoding records,
+    please refer to print.pm.

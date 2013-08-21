@@ -1,0 +1,31 @@
+<nav>
+    <collection label="Splunk for Sourcefire">
+        <collection label="Searches &amp; Reports">
+            <collection label="Reports">
+                <saved source="unclassified" match="report" />
+            </collection>
+            <divider />
+            <saved source="unclassified" />
+        </collection>
+        <a href="/manager/Sourcefire">Configuration</a>
+        <divider />
+        <a href="mailto:bd-labs@splunk.com">Send Feedback</a>
+        <view name="about" />
+    </collection>
+    
+    <collection label="Dashboards">
+        <view name="overview" default="true"/>
+        <view name="all_intrusion_events" />
+    </collection>
+    
+    <collection label="Searches">
+        <a href="/app/Sourcefire/flashtimeline?q=search%20sourcetype=estreamer%20OR%20sourcetype=estreamer_pcap">Timeline</a>
+        <view name="search_by_ip" />
+        <view name="search_by_event_id" />
+    </collection>
+    <!--
+    <view isVisible="false">
+        <view name="overview" default="true" />
+    </view>
+    -->
+</nav>

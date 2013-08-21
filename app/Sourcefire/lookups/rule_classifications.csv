@@ -1,0 +1,35 @@
+class,class_name,class_desc
+1,not-suspicious,Not Suspicious Traffic
+2,unknown,Unknown Traffic
+3,bad-unknown,Potentially Bad Traffic
+4,attempted-recon,Attempted Information Leak
+5,successful-recon-limited,Information Leak
+6,successful-recon-largescale,Large Scale Information Leak
+7,attempted-dos,Attempted Denial of Service
+8,successful-dos,Denial of Service
+9,attempted-user,Attempted User Privilege Gain
+10,unsuccessful-user,Unsuccessful User Privilege Gain
+11,successful-user,Successful User Privilege Gain
+12,attempted-admin,Attempted Administrator Privilege Gain
+13,successful-admin,Successful Administrator Privilege Gain
+14,rpc-portmap-decode,Decode of an RPC Query
+15,shellcode-detect,Executable Code was Detected
+16,string-detect,A Suspicious String was Detected
+17,suspicious-filename-detect,A Suspicious Filename was Detected
+18,suspicious-login,An Attempted Login Using a Suspicious Username was Detected
+19,system-call-detect,A System Call was Detected
+20,tcp-connection,A TCP Connection was Detected
+21,trojan-activity,A Network Trojan was Detected
+22,unusual-client-port-connection,A Client was Using an Unusual Port
+23,network-scan,Detection of a Network Scan
+24,denial-of-service,Detection of a Denial of Service Attack
+25,non-standard-protocol,Detection of a Non-Standard Protocol or Event
+26,protocol-command-decode,Generic Protocol Command Decode
+27,web-application-activity,Access to a Potentially Vulnerable Web Application
+28,web-application-attack,Web Application Attack
+29,misc-activity,Misc Activity
+30,misc-attack,Misc Attack
+31,icmp-event,Generic ICMP Event
+32,inappropriate-content,Inappropriate Content was Detected
+33,policy-violation,Potential Corporate Privacy Violation
+34,default-login-attempt,Attempt to Login By a Default Username and Password

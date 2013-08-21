@@ -1,0 +1,153 @@
+<view template="dashboard.html" refresh="300">
+    <label>Overview</label>
+    <module name="AccountBar" layoutPanel="appHeader"/>
+    <module name="AppBar" layoutPanel="navigationHeader"/>
+    <module name="Message" layoutPanel="messaging">
+        <param name="filter">*</param>
+        <param name="clearOnJobDispatch">False</param>
+        <param name="maxSize">1</param>
+    </module>
+    
+    <module name="TitleBar" layoutPanel="navigationHeader">
+        <param name="actionsMenuFilter">dashboard</param>
+        <!-- <param name="showActionsMenu">False</param> -->
+    </module>
+
+    <module name="GenericHeader" layoutPanel="panel_row1_col1">
+        <param name="label">Event Overview</param>
+    </module>
+
+    <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+        <param name="text">This dashboard provides visibility into intrusion events
+        in your network environment. You can adjust the time range of this report by
+        selecting your desired time using the picker below.</param>
+    </module>
+
+    <module name="TimeRangePicker" layoutPanel="panel_row1_col1" autoRun="true">
+        <param name="default">Last 24 hours</param>
+        <param name="searchWhenChanged">true</param>
+        <!--
+        <module name="HiddenSavedSearch" autoRun="true">
+            <param name="savedSearch">Event Records Datacube</param>
+            
+        </module>
+        -->
+        
+        <module name="HiddenSavedSearch" autoRun="true">
+            <param name="useHistory">auto</param>
+            <param name="savedSearch">Event Records Datacube</param>
+            <module name="JobProgressIndicator" />
+            
+            <module name="ResultsHeader">
+                <param name="entityLabel">events</param>
+                <param name="entityName">events</param>
+                <module name="FlashTimeline">
+                    <param name="height">100px</param>
+                    <param name="width">100%</param>
+                    <module name="ViewRedirectorLink">
+                        <param name="viewTarget">flashtimeline</param>
+                        <param name="label">View Full Report</param>
+                        <param name="popup">True</param>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Top 10 Source IP -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row3_col1" group="Top 10 Source IP">
+                <param name="search">top limit=10 src_addr</param>
+                <module name="JobProgressIndicator" />
+                <module name="HiddenChartFormatter">
+                    <param name="chart">pie</param>
+                    <!-- <param name="chartTitle">Top Attackers</param> -->
+                    <module name="FlashChart">
+                        <module name="ConvertToDrilldownSearch">
+                            <module name="ViewRedirector">
+                                <param name="viewTarget">flashtimeline</param>
+                                <param name="popup">True</param>
+                            </module>
+                        </module>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Top 10 Destination IP -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row3_col2" group="Top 10 Destination IP">
+                <param name="search">top limit=10 dst_addr</param>
+                <module name="JobProgressIndicator" />
+                <module name="HiddenChartFormatter">
+                    <param name="chart">pie</param>
+                    <module name="FlashChart">
+                        <module name="ConvertToDrilldownSearch">
+                            <module name="ViewRedirector">
+                                <param name="viewTarget">flashtimeline</param>
+                                <param name="popup">True</param>
+                            </module>
+                        </module>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Top 10 Target Ports -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row3_col3" group="Top 10 Target Ports">
+                <param name="search">top limit=10 dst_port | fields - percent</param>
+                <module name="JobProgressIndicator" />
+                <module name="HiddenChartFormatter">
+                    <param name="chart">bar</param>
+                    <module name="FlashChart">
+                        <module name="ConvertToDrilldownSearch">
+                            <module name="ViewRedirector">
+                                <param name="viewTarget">flashtimeline</param>
+                                <param name="popup">True</param>
+                            </module>
+                        </module>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Top 10 Alerts -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="Top 10 Alerts">
+                <param name="search">join sid [search `rule_records`] | top limit=10 rule_msg | fields - percent</param>
+                <module name="JobProgressIndicator" />
+                <module name="HiddenChartFormatter">
+                    <param name="chart">bar</param>
+                    <param name="legend.placement">none</param>
+                    <param name="primaryAxisTitle.text"> </param>
+                    <module name="FlashChart">
+                        <module name="ConvertToDrilldownSearch">
+                            <module name="ViewRedirector">
+                                <param name="viewTarget">flashtimeline</param>
+                                <param name="popup">True</param>
+                            </module>
+                        </module>
+                    </module>
+                </module>
+            </module>
+            
+            <!-- Last 10 Intrusion Events -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row5_col1" group="Last 10 Intrusion Events">
+                <param name="search">sort event_sec | tail 10
+                    | join sid [search `rule_records`]
+                    | join sensor_id [search `sensor_records`]
+                    | eval event_time = strftime(event_sec, "%m/%d/%Y %H:%M:%S")
+                    | stats count by event_time sensor_name event_id rule_id rule_msg class_name priority impact_flag src_addr src_port dst_addr dst_port proto_name | sort - event_id
+                </param>
+                <module name="JobProgressIndicator" />
+                <module name="SimpleResultsTable">
+                    <param name="drilldown">row</param>
+                    <module name="ConvertToDrilldownSearch">
+                        <module name="ViewRedirector">
+                            <param name="viewTarget">flashtimeline</param>
+                            <param name="popup">True</param>
+                        </module>
+                    </module>
+                </module>
+                <module name="ViewRedirectorLink">
+                    <param name="viewTarget">flashtimeline</param>
+                    <param name="label">View all events</param>
+                    <param name="popup">True</param>
+                </module>
+            </module> <!-- HiddenPostProcess -->
+            
+        </module> <!-- end HiddenSavedSearch -->
+    </module> <!-- end TimeRangePicker -->
+</view>

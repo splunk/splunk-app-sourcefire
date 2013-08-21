@@ -1,0 +1,62 @@
+ssl_test.pl handles any record type and simply prints it to
+STDOUT. Note that because printing raw packet data to STDOUT is likely to
+interfere with your terminal, we have disabled printing of this record.
+
+To get host information from the network map printed to STDOUT, run 
+ssl_test.pl with the -h command line option and an IP or a range of IPs:
+  ./ssl_test.pl mydc -h 192.168.45.23
+  ./ssl_test.pl mydc -h 10.0.0.0,10.255.255.255
+
+To get IDS events dumped in CSV format, run with the `-o csv` option.  These
+records contain all of the fields of an IDS event separated by '|' characters.
+You will probably also want to redirect the output to a file:
+  ./ssl_test.pl mydc -o csv
+  ./ssl_test.pl mydc -o csv -f events.csv
+
+To get pcap data, run with the `-o pcap` option.  In this case, specifying
+an output file with -f is mandatory as binary data is being dumped:
+  ./ssl_test.pl mydc -o pcap -f ids.pcap
+
+To output IDS events to the local syslog server, run with the `-o syslog`
+option.  This output method relies on having a binary named "logger" in the
+path and thus will only work on UNIX-like systems.
+  ./ssl_test.pl mydc -o syslog
+
+To output IDS events to an SNMP trap server, run with the `-o snmp` option.
+This output method relies on having a binary named "snmptrapd" in the path
+and thus will only work on UNIX-like systems.  The -f argument is used to
+specify the trap server to use.
+  ./ssl_test.pl mydc -o snmp -f mytrapserver
+
+
+These example scripts require that you have the folowing third party
+Perl modules (available from cpan.org, run `perl -MCPAN -eshell`):
+
+     File::Copy
+     Getopt::Long
+     Socket
+     IO::Socket::SSL
+
+To leverage the optional IPv6 conectivity you will need the following third party 
+Perl modules (available from cpan.org, run `perl -MCPAN -eshell`):
+
+     Socket6
+     IO::Socket::INET6
+
+
+
+You MUST follow the directions in the user guide for issuing a
+certificate to the client.
+
+The basic steps are as follows:
+
+- Use the Sourcefire DC web UI to create a new estreamer client
+- Download the pkcs12 file that is generated after adding a client
+- copy the resulting .pkcs12 to the estreamer client system in the same
+  directory as the ssl_test.pl script
+- For ipv4 run `ssl_test.pl [ip or resolvable hostname of DC]`
+                                  OR
+- For ipv6 run `ssl_test.pl -ipv6 [ip or resolvable hostname of DC]`
+  
+For more detailed command line opions run ssl_test.pl with no command
+line arguments. This will print the usage information.

@@ -1,0 +1,102 @@
+<view template="dashboard.html" onunloadCancelJobs="False" autoCancelInterval="100">
+    <label>By Event ID</label>
+    <module name="AccountBar" layoutPanel="appHeader"/>
+    <module name="AppBar" layoutPanel="navigationHeader"/>
+    <module name="Message" layoutPanel="messaging">
+        <param name="filter">*</param>
+        <param name="clearOnJobDispatch">False</param>
+        <param name="maxSize">1</param>
+    </module>
+
+    <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+        <param name="text">Type in an Event ID that you want to search for.</param>
+    </module>
+
+    <module name="HiddenSearch" layoutPanel="viewHeader">
+        <param name="search">event_id=$event_id$ sourcetype=estreamer sid=*
+        | join event_id [search sourcetype=estreamer_pcap]
+        | join sid [search `rule_records`]
+        | join sensor_id [search `sensor_records`]
+        | eval event_time = strftime(event_sec, "%m/%d/%Y %H:%M:%S")
+        </param>
+        
+        <!-- $event_id$ -->
+        <module name="ExtendedFieldSearch" layoutPanel="panel_row1_col1_grp1">
+            <param name="field">Event ID</param>
+            <param name="q">*</param>
+            <param name="intention">
+                <param name="name">stringreplace</param>
+                <param name="arg">
+                    <param name="event_id">
+                        <param name="default">*</param>
+                    </param>
+                </param>
+            </param>
+            <param name="replacementMap">
+                <param name="arg">
+                    <param name="event_id">
+                        <param name="value"></param>
+                    </param>
+                </param>
+            </param>
+            
+            <module name="TimeRangePicker" layoutPanel="panel_row1_col1_grp2">
+                <param name="searchWhenChanged">false</param>
+                <module name="SubmitButton">
+                    <param name="allowSoftSubmit">true</param>
+                    <param name="label">Search</param>
+                    <module name="JobStatus" layoutPanel="viewHeader">
+                        <!-- sourcetype=estreamer events -->
+                        <module name="HiddenPostProcess" layoutPanel="panel_row2_col1">
+                            <param name="search">fields event_time sensor_name event_id rule_id rule_msg class_name priority impact_flag src_addr src_port dst_addr dst_port proto_name
+                            | fields - _raw,_time
+                            </param>
+                            <module name="Paginator">
+                                <param name="entityName">results</param>
+                                <module name="EnablePreview" group="Matching Intrusion Events">
+                                    <param name="enable">true</param>
+                                    <param name="display">false</param>
+                                    <module name="SimpleResultsTable">
+                                        <param name="entityName">results</param>
+                                        <param name="drilldown">row</param>
+                                        <module name="ConvertToDrilldownSearch">
+                                            <module name="ViewRedirector">
+                                                <param name="viewTarget">flashtimeline</param>
+                                                <param name="popup">True</param>
+                                            </module>
+                                        </module>
+                                    </module>
+                                </module>
+                            </module> <!-- end Paginator -->
+                        </module> <!-- HiddenPostProcess -->
+                        
+                        <module name="HiddenPostProcess" layoutPanel="panel_row3_col1">
+                            <param name="search">`all_pcap_fields`
+                            | fields - _raw,_time
+                            </param>
+                            <module name="Paginator">
+                                <param name="entityName">results</param>
+                                <module name="EnablePreview" group="Matching Pcap Events">
+                                    <param name="enable">true</param>
+                                    <param name="display">false</param>
+                                    <module name="SimpleResultsTable">
+                                        <param name="entityName">results</param>
+                                        <param name="drilldown">row</param>
+                                        <module name="ConvertToDrilldownSearch">
+                                            <module name="ViewRedirector">
+                                                <param name="viewTarget">flashtimeline</param>
+                                                <param name="popup">True</param>
+                                            </module>
+                                        </module>
+                                    </module>
+                                </module>
+                            </module> <!-- end Paginator -->
+                        </module> <!-- HiddenPostProcess -->
+                        
+                        
+                    </module> <!-- JobStatus -->
+                </module> <!-- SubmitButton -->
+            </module> <!-- TimeRangePicker -->
+        </module> <!-- end ExtendedFieldSearch event_id -->
+    </module> <!-- end HiddenSearch -->
+</view>

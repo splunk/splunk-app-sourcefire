@@ -1,0 +1,164 @@
+<view template="dashboard.html" onunloadCancelJobs="False" autoCancelInterval="100">
+    <label>By IP and Port</label>
+    <module name="AccountBar" layoutPanel="appHeader"/>
+    <module name="AppBar" layoutPanel="navigationHeader"/>
+    <module name="Message" layoutPanel="messaging">
+        <param name="filter">*</param>
+        <param name="clearOnJobDispatch">False</param>
+        <param name="maxSize">1</param>
+    </module>
+
+    <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+        <param name="text">Type in Source IP Address, Source Port, Destination IP Address and/or Destination Port
+        that you want to search for.</param>
+    </module>
+
+    <module name="HiddenSearch" layoutPanel="viewHeader">
+        <param name="search">sourcetype=estreamer src_addr=$src_addr$ src_port=$src_port$ dst_addr=$dst_addr$ dst_port=$dst_port$
+        | join sid [search `rule_records`]
+        | join sensor_id [search `sensor_records`]
+        | eval event_time = strftime(event_sec, "%m/%d/%Y %H:%M:%S")
+        | fields event_time sensor_name event_id rule_id rule_msg class_name priority impact_flag src_addr src_port dst_addr dst_port proto_name
+        | fields - _raw
+        </param>
+        
+        <!-- $src_addr$ -->
+        <module name="ExtendedFieldSearch" layoutPanel="panel_row1_col1_grp1">
+            <param name="field">Source IP</param>
+            <param name="q">*</param>
+            <param name="intention">
+                <param name="name">stringreplace</param>
+                <param name="arg">
+                    <param name="src_addr">
+                        <param name="default">*</param>
+                    </param>
+                </param>
+            </param>
+            <param name="replacementMap">
+                <param name="arg">
+                    <param name="src_addr">
+                        <param name="value"></param>
+                    </param>
+                </param>
+            </param>
+            
+            <!-- $src_port$ -->
+            <module name="ExtendedFieldSearch" layoutPanel="panel_row1_col1_grp1">
+                <param name="field">Source Port</param>
+                <param name="q">*</param>
+                <param name="intention">
+                    <param name="name">stringreplace</param>
+                    <param name="arg">
+                        <param name="src_port">
+                            <param name="default">*</param>
+                        </param>
+                    </param>
+                </param>
+                <param name="replacementMap">
+                    <param name="arg">
+                        <param name="src_port">
+                            <param name="value"></param>
+                        </param>
+                    </param>
+                </param>
+                
+                <!-- $dst_addr$ -->
+                <module name="ExtendedFieldSearch" layoutPanel="panel_row1_col1_grp2">
+                    <param name="field">Destination IP</param>
+                    <param name="q">*</param>
+                    <param name="intention">
+                        <param name="name">stringreplace</param>
+                        <param name="arg">
+                            <param name="dst_addr">
+                                <param name="default">*</param>
+                            </param>
+                        </param>
+                    </param>
+                    <param name="replacementMap">
+                        <param name="arg">
+                            <param name="dst_addr">
+                                <param name="value"></param>
+                            </param>
+                        </param>
+                    </param>
+                
+                    <!-- $dst_port$ -->
+                    <module name="ExtendedFieldSearch" layoutPanel="panel_row1_col1_grp2">
+                        <param name="field">Destination Port</param>
+                        <param name="q">*</param>
+                        <param name="intention">
+                            <param name="name">stringreplace</param>
+                            <param name="arg">
+                                <param name="dst_port">
+                                    <param name="default">*</param>
+                                </param>
+                            </param>
+                        </param>
+                        <param name="replacementMap">
+                            <param name="arg">
+                                <param name="dst_port">
+                                    <param name="value"></param>
+                                </param>
+                            </param>
+                        </param>
+                        
+                        <module name="TimeRangePicker" layoutPanel="panel_row1_col1_grp3">
+                            <param name="searchWhenChanged">false</param>
+                            <module name="SubmitButton">
+                                <param name="allowSoftSubmit">true</param>
+                                <param name="label">Search</param>
+                                <module name="JobStatus" layoutPanel="viewHeader">
+                                    
+                                    <module name="Paginator" layoutPanel="panel_row2_col1">
+                                        <param name="count">20</param>
+                                        <param name="entityName">results</param>
+                                        <module name="EnablePreview" group="Matching events">
+                                            <param name="enable">true</param>
+                                            <param name="display">false</param>
+                                            
+                                            <module name="HiddenPostProcess">
+                                                <param name="search">timechart count(event_id) AS Count</param>
+                                                <module name="HiddenChartFormatter">
+                                                    <param name="chart">line</param>
+                                                    <param name="chart.nullValueMode">zero</param>
+                                                    <param name="legend.placement">none</param>
+                                                    <param name="primaryAxisTitle.text"> </param>
+                                                    <module name="FlashChart">
+                                                    </module>
+                                                </module>
+                                            </module>
+                                            
+                                            <module name="HiddenPostProcess">
+                                                <param name="search">fields - _time</param>
+                                                <module name="SimpleResultsTable">
+                                                    <param name="count">20</param>
+                                                    <param name="entityName">results</param>
+                                                    <param name="drilldown">row</param>
+                                                    <module name="ConvertToDrilldownSearch">
+                                                        <module name="ViewRedirector">
+                                                            <param name="viewTarget">flashtimeline</param>
+                                                            <param name="popup">True</param>
+                                                        </module>
+                                                    </module>
+                                                </module>
+                                            </module>
+                                            
+                                            <!-- Bottom paginator -->
+                                            <module name="Paginator">
+                                                <param name="entityName">results</param>
+                                            </module>
+                                            <module name="ViewRedirectorLink">
+                                                <param name="viewTarget">flashtimeline</param>
+                                            </module>
+                                            
+                                        </module> <!-- EnablePreview -->
+                                    </module> <!-- end Paginator -->
+                                </module> <!-- JobStatus -->
+                            </module> <!-- SubmitButton -->
+                        </module> <!-- TimeRangePicker -->
+                    </module> <!-- end ExtendedFieldSearch dst_port -->
+                </module> <!-- end ExtendedFieldSearch dst_addr -->
+            </module> <!-- end ExtendedFieldSearch src_port -->
+        </module> <!-- end ExtendedFieldSearch src_addr -->
+    </module> <!-- end HiddenSearch -->
+</view>
