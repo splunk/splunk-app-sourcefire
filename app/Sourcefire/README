@@ -15,7 +15,8 @@
 #  Author: Andrew Thanalertvisuti - Splunk, Inc.                  #
 #          athana@splunk.com                                      #
 #                                                                 #
-#  For support, please contact: bd-labs@splunk.com                #
+#  For support: This is an usupported app                         #
+#  Please post to answers.splunk.com                              #
 #                                                                 #
 ###################################################################
 
@@ -51,5 +52,3 @@ Then restart the Splunk server.
 
 
 NOTE: It may take up to 5 minutes for new data to show up. The app relies on "sourcetype = estreamer" and "sourcetype = estreamer_pcap" data, please do not change the sourcetype in inputs.conf.
-
-For support, please contact: bd-labs@splunk.com
